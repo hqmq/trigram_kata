@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'benchmark/ips'
+require_relative '../lib/trigram'
+require_relative '../lib/generator'
+
+str = File.read("samples/20k_leagues.txt")
+tri = Trigram.new(str)
+
+Benchmark.ips do |x|
+  x.config(:warmup => 300, :time => 10)
+  x.report("load text") do
+    Trigram.new(str)
+  end
+  x.report("generate text") do
+    Generator.generate(tri, "the sea", 1000)
+  end
+end
